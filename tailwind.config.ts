@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -61,6 +62,14 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				campus: {
+					purple: '#2D1B69',
+					teal: '#06D6A0',
+					pink: '#FF61A6',
+					blue: '#4CC9F0',
+					dark: '#121217',
+					darkAccent: '#1E1B24'
 				}
 			},
 			borderRadius: {
@@ -84,12 +93,43 @@ export default {
 					to: {
 						height: '0'
 					}
-				}
+				},
+                'fade-in': {
+                    '0%': { 
+                        opacity: '0',
+                        transform: 'translateY(10px)'
+                    },
+                    '100%': { 
+                        opacity: '1',
+                        transform: 'translateY(0)'
+                    }
+                },
+                'pulse-subtle': {
+                    '0%, 100%': { 
+                        opacity: '1'
+                    },
+                    '50%': { 
+                        opacity: '0.85'
+                    }
+                }
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
-			}
+				'accordion-up': 'accordion-up 0.2s ease-out',
+                'fade-in': 'fade-in 0.3s ease-out forwards',
+                'pulse-subtle': 'pulse-subtle 3s ease-in-out infinite'
+			},
+            backgroundImage: {
+                'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+                'hero-pattern': 'linear-gradient(109.6deg, rgba(12, 10, 29, 0.8) 11.2%, rgba(40, 32, 70, 0.8) 91.1%)',
+                'card-gradient': 'linear-gradient(135deg, rgba(45, 27, 105, 0.4) 0%, rgba(6, 214, 160, 0.1) 100%)',
+                'tab-gradient': 'linear-gradient(90deg, rgba(45, 27, 105, 0.8) 0%, rgba(255, 97, 166, 0.8) 100%)'
+            },
+            backdropFilter: {
+                'blur-sm': 'blur(4px)',
+                'blur-md': 'blur(8px)',
+                'blur-lg': 'blur(16px)'
+            }
 		}
 	},
 	plugins: [require("tailwindcss-animate")],
