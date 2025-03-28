@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Header from '@/components/Header';
 import Banner from '@/components/Banner';
 import EventCard from '@/components/EventCard';
@@ -99,6 +99,30 @@ const Index = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [activeTab, setActiveTab] = useState('events');
 
+  // Effect to scroll to section based on hash
+  useEffect(() => {
+    const hash = window.location.hash;
+    if (hash) {
+      const id = hash.replace('#', '');
+      if (['events', 'for-you', 'saved', 'voting'].includes(id)) {
+        setActiveTab(id);
+        
+        // Small delay to ensure tab content is rendered before scroll
+        setTimeout(() => {
+          const element = document.getElementById(id);
+          if (element) {
+            element.scrollIntoView({ behavior: 'smooth' });
+          }
+        }, 100);
+      } else if (['resume', 'feedback'].includes(id)) {
+        const element = document.getElementById(id);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
+      }
+    }
+  }, []);
+
   const filteredEvents = sampleEvents.filter(event => 
     event.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
     event.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -122,73 +146,75 @@ const Index = () => {
           imageUrl="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&q=80&w=1170"
         />
         
-        <Tabs defaultValue="events" value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="w-full max-w-lg mx-auto mb-8 bg-campus-dark border border-white/10 overflow-x-auto no-scrollbar rounded-full p-1">
-            <TabsTrigger value="events" className="rounded-full flex-1">All Events</TabsTrigger>
-            <TabsTrigger value="for-you" className="rounded-full flex-1">For You</TabsTrigger>
-            <TabsTrigger value="saved" className="rounded-full flex-1">Saved</TabsTrigger>
-            <TabsTrigger value="voting" className="rounded-full flex-1">Voting</TabsTrigger>
-          </TabsList>
-          
-          <div className="mb-8">
-            <div className="relative max-w-md mx-auto">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/60" />
-              <Input
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search events, categories, locations..."
-                className="pl-10 pr-4 py-6 bg-campus-darkAccent border-white/10 focus:border-campus-teal"
-              />
-              <Button
-                variant="ghost"
-                size="icon"
-                className="absolute right-2 top-1/2 transform -translate-y-1/2"
-              >
-                <Filter className="h-5 w-5 text-white/60" />
-              </Button>
-            </div>
-          </div>
-          
-          {/* All Events Tab */}
-          <TabsContent value="events" className="border-none p-0 animate-fade-in">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredEvents.map(event => (
-                <EventCard key={event.id} {...event} />
-              ))}
-            </div>
-          </TabsContent>
-          
-          {/* For You Tab */}
-          <TabsContent value="for-you" className="border-none p-0 animate-fade-in">
-            <div className="mb-12">
-              {aiRecommendations.map((recommendation, idx) => (
-                <AIRecommendation 
-                  key={idx} 
-                  reasonText={recommendation.reasonText} 
-                  events={recommendation.events} 
+        <div id="tabs-container" className="scroll-mt-20">
+          <Tabs defaultValue="events" value={activeTab} onValueChange={setActiveTab} className="w-full">
+            <TabsList className="w-full max-w-lg mx-auto mb-8 bg-campus-dark border border-white/10 overflow-x-auto no-scrollbar rounded-full p-1">
+              <TabsTrigger id="events" value="events" className="rounded-full flex-1">All Events</TabsTrigger>
+              <TabsTrigger id="for-you" value="for-you" className="rounded-full flex-1">For You</TabsTrigger>
+              <TabsTrigger id="saved" value="saved" className="rounded-full flex-1">Saved</TabsTrigger>
+              <TabsTrigger id="voting" value="voting" className="rounded-full flex-1">Voting</TabsTrigger>
+            </TabsList>
+            
+            <div className="mb-8">
+              <div className="relative max-w-md mx-auto">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/60" />
+                <Input
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Search events, categories, locations..."
+                  className="pl-10 pr-4 py-6 bg-campus-darkAccent border-white/10 focus:border-campus-teal"
                 />
-              ))}
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="absolute right-2 top-1/2 transform -translate-y-1/2"
+                >
+                  <Filter className="h-5 w-5 text-white/60" />
+                </Button>
+              </div>
             </div>
-          </TabsContent>
-          
-          {/* Saved Tab */}
-          <TabsContent value="saved" className="border-none p-0 animate-fade-in">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {savedEvents.map(event => (
-                <EventCard key={event.id} {...event} />
-              ))}
-            </div>
-          </TabsContent>
-          
-          {/* Voting Tab */}
-          <TabsContent value="voting" className="border-none p-0 animate-fade-in">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {votedEvents.map(event => (
-                <EventCard key={event.id} {...event} />
-              ))}
-            </div>
-          </TabsContent>
-        </Tabs>
+            
+            {/* All Events Tab */}
+            <TabsContent value="events" className="border-none p-0 animate-fade-in">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {filteredEvents.map(event => (
+                  <EventCard key={event.id} {...event} />
+                ))}
+              </div>
+            </TabsContent>
+            
+            {/* For You Tab */}
+            <TabsContent value="for-you" className="border-none p-0 animate-fade-in">
+              <div className="mb-12">
+                {aiRecommendations.map((recommendation, idx) => (
+                  <AIRecommendation 
+                    key={idx} 
+                    reasonText={recommendation.reasonText} 
+                    events={recommendation.events} 
+                  />
+                ))}
+              </div>
+            </TabsContent>
+            
+            {/* Saved Tab */}
+            <TabsContent value="saved" className="border-none p-0 animate-fade-in">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {savedEvents.map(event => (
+                  <EventCard key={event.id} {...event} />
+                ))}
+              </div>
+            </TabsContent>
+            
+            {/* Voting Tab */}
+            <TabsContent value="voting" className="border-none p-0 animate-fade-in">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {votedEvents.map(event => (
+                  <EventCard key={event.id} {...event} />
+                ))}
+              </div>
+            </TabsContent>
+          </Tabs>
+        </div>
         
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-16" id="resume">
           <div>
@@ -202,7 +228,7 @@ const Index = () => {
               <ResumeBooster />
             </div>
             
-            <div>
+            <div id="feedback">
               <h2 className="text-2xl font-semibold mb-6 text-white">Feedback</h2>
               <FeedbackForm />
             </div>
@@ -212,7 +238,7 @@ const Index = () => {
       
       <footer className="bg-campus-darkAccent/80 border-t border-white/10 py-8 mt-16">
         <div className="max-w-7xl mx-auto px-4 text-center">
-          <p className="text-white/60 mb-4">© 2023 CampusConnect. All rights reserved.</p>
+          <p className="text-white/60 mb-4">© 2023 EaseEve. All rights reserved.</p>
           <div className="flex justify-center space-x-6">
             <a href="#" className="text-white/60 hover:text-campus-teal transition-colors">About</a>
             <a href="#" className="text-white/60 hover:text-campus-teal transition-colors">Privacy</a>

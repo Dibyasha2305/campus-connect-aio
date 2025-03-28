@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Bell, Calendar, User, Menu, X } from 'lucide-react';
+import { Bell, Calendar, User, Menu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { 
   Sheet,
@@ -23,6 +23,13 @@ const Header = () => {
     });
   };
 
+  const scrollToSection = (id: string) => {
+    const element = document.getElementById(id);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <header className="sticky top-0 z-50 w-full px-4 md:px-6 py-3 backdrop-blur-md bg-campus-dark/80 border-b border-white/10">
       <div className="flex items-center justify-between max-w-7xl mx-auto">
@@ -36,11 +43,12 @@ const Header = () => {
               </SheetTrigger>
               <SheetContent side="left" className="bg-campus-darkAccent border-r border-white/10">
                 <nav className="flex flex-col gap-4 mt-8">
-                  <a href="#events" className="text-white hover:text-campus-teal transition-colors">Events</a>
-                  <a href="#for-you" className="text-white hover:text-campus-teal transition-colors">For You</a>
-                  <a href="#saved" className="text-white hover:text-campus-teal transition-colors">Saved</a>
-                  <a href="#voting" className="text-white hover:text-campus-teal transition-colors">Voting</a>
-                  <a href="#resume" className="text-white hover:text-campus-teal transition-colors">Resume Booster</a>
+                  <button onClick={() => scrollToSection('events')} className="text-left text-white hover:text-campus-teal transition-colors">Events</button>
+                  <button onClick={() => scrollToSection('for-you')} className="text-left text-white hover:text-campus-teal transition-colors">For You</button>
+                  <button onClick={() => scrollToSection('saved')} className="text-left text-white hover:text-campus-teal transition-colors">Saved</button>
+                  <button onClick={() => scrollToSection('voting')} className="text-left text-white hover:text-campus-teal transition-colors">Voting</button>
+                  <button onClick={() => scrollToSection('resume')} className="text-left text-white hover:text-campus-teal transition-colors">Resume Booster</button>
+                  <button onClick={() => scrollToSection('feedback')} className="text-left text-white hover:text-campus-teal transition-colors">Feedback</button>
                 </nav>
               </SheetContent>
             </Sheet>
@@ -48,18 +56,19 @@ const Header = () => {
           
           <div className="flex items-center">
             <span className="text-xl font-bold bg-gradient-to-r from-campus-teal to-campus-blue bg-clip-text text-transparent">
-              Campus<span className="text-campus-pink">Connect</span>
+              Ease<span className="text-campus-pink">Eve</span>
             </span>
           </div>
         </div>
 
         {!isMobile && (
           <nav className="hidden md:flex items-center space-x-6">
-            <a href="#events" className="text-white hover:text-campus-teal transition-colors">Events</a>
-            <a href="#for-you" className="text-white hover:text-campus-teal transition-colors">For You</a>
-            <a href="#saved" className="text-white hover:text-campus-teal transition-colors">Saved</a>
-            <a href="#voting" className="text-white hover:text-campus-teal transition-colors">Voting</a>
-            <a href="#resume" className="text-white hover:text-campus-teal transition-colors">Resume Booster</a>
+            <button onClick={() => scrollToSection('events')} className="text-white hover:text-campus-teal transition-colors">Events</button>
+            <button onClick={() => scrollToSection('for-you')} className="text-white hover:text-campus-teal transition-colors">For You</button>
+            <button onClick={() => scrollToSection('saved')} className="text-white hover:text-campus-teal transition-colors">Saved</button>
+            <button onClick={() => scrollToSection('voting')} className="text-white hover:text-campus-teal transition-colors">Voting</button>
+            <button onClick={() => scrollToSection('resume')} className="text-white hover:text-campus-teal transition-colors">Resume Booster</button>
+            <button onClick={() => scrollToSection('feedback')} className="text-white hover:text-campus-teal transition-colors">Feedback</button>
           </nav>
         )}
 

@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { MessageSquare } from 'lucide-react';
+import { MessageSquare, Star } from 'lucide-react';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/ui/use-toast';
@@ -11,11 +11,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { Input } from '@/components/ui/input';
 
 const FeedbackForm = () => {
   const { toast } = useToast();
   const [feedback, setFeedback] = useState('');
   const [eventSelection, setEventSelection] = useState('');
+  const [rating, setRating] = useState<number | null>(null);
+  const [email, setEmail] = useState('');
   
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -23,7 +26,7 @@ const FeedbackForm = () => {
     if (!feedback.trim() || !eventSelection) {
       toast({
         title: "Error",
-        description: "Please complete all fields before submitting.",
+        description: "Please select an event and provide feedback.",
         variant: "destructive"
       });
       return;
@@ -31,12 +34,14 @@ const FeedbackForm = () => {
     
     toast({
       title: "Feedback Submitted",
-      description: "Thank you for your feedback!",
+      description: "Thank you for your feedback! Your input helps us improve.",
     });
     
     // Reset the form
     setFeedback('');
     setEventSelection('');
+    setRating(null);
+    setEmail('');
   };
 
   return (
@@ -60,8 +65,48 @@ const FeedbackForm = () => {
               <SelectItem value="career-fair">Spring Career Fair</SelectItem>
               <SelectItem value="concert">Annual Spring Concert</SelectItem>
               <SelectItem value="workshop">AI Workshop Series</SelectItem>
+              <SelectItem value="basketball">Intramural Basketball Tournament</SelectItem>
+              <SelectItem value="tech-panel">Women in Tech Panel Discussion</SelectItem>
             </SelectContent>
           </Select>
+        </div>
+        
+        <div>
+          <label htmlFor="email" className="block text-white/80 mb-2">
+            Your Email (optional)
+          </label>
+          <Input
+            id="email"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="email@example.com"
+            className="bg-campus-dark border-white/20"
+          />
+        </div>
+        
+        <div>
+          <label className="block text-white/80 mb-2">
+            Rate Your Experience
+          </label>
+          <div className="flex gap-1">
+            {[1, 2, 3, 4, 5].map((star) => (
+              <button
+                key={star}
+                type="button"
+                onClick={() => setRating(star)}
+                className="p-1 focus:outline-none"
+              >
+                <Star
+                  className={`h-6 w-6 ${
+                    rating && star <= rating 
+                      ? 'text-campus-pink fill-campus-pink' 
+                      : 'text-white/40'
+                  }`}
+                />
+              </button>
+            ))}
+          </div>
         </div>
         
         <div>
@@ -72,7 +117,7 @@ const FeedbackForm = () => {
             id="feedback"
             value={feedback}
             onChange={(e) => setFeedback(e.target.value)}
-            placeholder="Share your thoughts about this event..."
+            placeholder="Share your thoughts about this event... What did you like? What could be improved?"
             className="min-h-[120px] bg-campus-dark border-white/20"
           />
         </div>
